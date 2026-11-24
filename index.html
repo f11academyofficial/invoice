@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pembuat Invoice Gratis untuk Penjual Online</title>
+<meta name="description" content="Buat invoice dari orderan WhatsApp, Shopee, Tokopedia, dan lainnya. Gratis, tanpa daftar, data tersimpan di browser Anda.">
+<meta name="theme-color" content="#0e6b5c">
+<meta property="og:title" content="Pembuat Invoice Gratis untuk Penjual Online">
+<meta property="og:description" content="Katalog produk, daftar pesanan, cetak PDF, dan kirim invoice lewat WhatsApp. Gratis dan tanpa daftar.">
+<meta property="og:type" content="website">
+<style>
+:root{--bg:#eef2f1;--card:#fff;--ink:#14282b;--mute:#5d7074;--line:#d3dcdb;--acc:#0e6b5c;--acc2:#e8f3f0}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1a1c;--card:#172427;--ink:#e6efee;--mute:#93a8ab;--line:#2b3c3f;--acc:#3fbfa6;--acc2:#1c3330}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:16px;display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:900px){.wrap{grid-template-columns:420px 1fr;align-items:start}}
+h1{font-size:20px;margin:0 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+fieldset{border:0;padding:0;margin:0 0 14px}
+legend{font-weight:700;margin-bottom:6px}
+label{display:block;font-size:13px;color:var(--mute);margin:8px 0 2px}
+input,select,textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.item{display:grid;grid-template-columns:1fr 60px 100px 32px;gap:6px;margin-bottom:6px}
+button{font:inherit;padding:9px 14px;border-radius:6px;border:1px solid var(--acc);background:var(--acc);color:#fff;cursor:pointer;font-weight:600}
+button.alt{background:transparent;color:var(--acc)}
+button.x{padding:0;background:transparent;color:var(--mute);border-color:var(--line)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#inv{background:#fff;color:#111;border:1px solid var(--line);border-radius:10px;padding:24px}
+#inv h2{margin:0;font-size:26px;color:#0e6b5c}
+#inv .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:2px solid #0e6b5c;padding-bottom:12px;margin-bottom:12px}
+#inv .meta{text-align:right;font-size:13px}
+#inv .src{display:inline-block;background:#e8f3f0;color:#0e6b5c;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600}
+#inv table{width:100%;border-collapse:collapse;margin:12px 0}
+#inv th{text-align:left;font-size:12px;color:#5d7074;border-bottom:1px solid #d3dcdb;padding:6px 4px}
+#inv td{padding:6px 4px;border-bottom:1px solid #eef2f1;vertical-align:top}
+#inv .n{text-align:right;white-space:nowrap}
+#inv .tot{margin-left:auto;width:min(280px,100%)}
+#inv .tot div{display:flex;justify-content:space-between;padding:3px 0}
+#inv .grand{font-weight:700;font-size:18px;border-top:2px solid #111;margin-top:4px;padding-top:6px!important}
+#inv .note{font-size:13px;color:#444;margin-top:14px;white-space:pre-wrap}
+.hist{font-size:13px}
+.hist button{padding:4px 8px;margin:2px 4px 2px 0;font-size:12px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.tabs button{padding:5px 10px;font-size:12px}
+.tabs button.on{background:var(--acc);color:#fff}
+.ord{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid var(--line);padding:8px 0}
+.ord small{color:var(--mute)}
+.ord button{padding:4px 8px;font-size:12px}
+.owe{background:var(--acc2);border-radius:6px;padding:8px;margin-top:6px}
+details{margin:8px 0}summary{cursor:pointer;font-weight:600;color:var(--acc)}
+@media print{body{background:#fff}.wrap{display:block;padding:0}.noprint{display:none!important}#inv{border:0;padding:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="noprint">
+ <div class="card">
+  <h1>Buat invoice</h1>
+  <p style="margin:0 0 6px;color:var(--mute);font-size:13px">Gratis, tanpa daftar. Data tersimpan di browser Anda dan tidak dikirim ke server mana pun.</p>
+  <details><summary>Cara pakai</summary><ol style="margin:6px 0 10px;padding-left:20px;font-size:13px;color:var(--mute)"><li>Isi data penjual sekali saja.</li><li>Simpan produk ke Katalog agar harga terisi otomatis.</li><li>Pilih asal orderan, lalu isi pembeli dan barang.</li><li>Tekan Simpan, lalu cetak PDF atau kirim lewat WhatsApp.</li><li>Tandai Lunas di daftar Pesanan saat sudah dibayar.</li></ol></details>
+  <fieldset><legend>Penjual</legend>
+   <label>Nama usaha</label><input id="sName" placeholder="Nama usaha">
+   <label>Kontak / alamat</label><textarea id="sInfo" rows="2" placeholder="No. WA, alamat"></textarea>
+   <label>Info pembayaran</label><textarea id="sPay" rows="2" placeholder="Transfer BCA 123456 a.n. ..."></textarea>
+  </fieldset>
+  <fieldset><legend>Pesanan</legend>
+   <div class="row">
+    <div><label>No. invoice</label><input id="no"></div>
+    <div><label>Tanggal</label><input id="date" type="date"></div>
+   </div>
+   <label>Asal orderan</label>
+   <select id="src">
+    <option>WhatsApp</option><option>Instagram</option><option>Facebook</option><option>Tokopedia</option>
+    <option>Shopee</option><option>Lynk.id</option><option>Langsung / offline</option><option>Lainnya</option>
+   </select>
+   <label>Nama pembeli</label><input id="cName" placeholder="Nama pembeli">
+   <label>No. WA / kontak pembeli</label><input id="cPhone" inputmode="tel" placeholder="08xxxxxxxxxx">
+   <label>Alamat (opsional)</label><textarea id="cAddr" rows="2"></textarea>
+  </fieldset>
+  <fieldset><legend>Barang</legend>
+   <div id="items"></div>
+   <button class="alt" id="add" type="button">Tambah barang</button>
+   <datalist id="cat"></datalist>
+   <details><summary>Katalog produk</summary>
+    <div class="row"><input id="cn" placeholder="Nama produk"><input id="cp" type="number" min="0" placeholder="Harga"></div>
+    <div class="bar"><button class="alt" id="cadd" type="button">Simpan ke katalog</button></div>
+    <div id="catl" class="hist"></div>
+   </details>
+   <div class="row">
+    <div><label>Ongkir (Rp)</label><input id="ship" type="number" min="0" value="0"></div>
+    <div><label>Diskon (Rp)</label><input id="disc" type="number" min="0" value="0"></div>
+   </div>
+   <label>Status</label>
+   <select id="status"><option>Belum dibayar</option><option>Lunas</option><option>DP</option></select>
+   <label>Catatan</label><textarea id="note" rows="2"></textarea>
+  </fieldset>
+  <div class="bar">
+   <button id="print" type="button">Cetak / simpan PDF</button>
+   <button class="alt" id="wa" type="button">Kirim ke WA pembeli</button>
+   <button class="alt" id="save" type="button">Simpan</button>
+   <button class="alt" id="new" type="button">Invoice baru</button>
+  </div>
+ </div>
+ <div class="card hist" style="margin-top:16px"><b>Pesanan</b>
+  <div class="owe" id="owe"></div><div class="tabs" id="tabs"></div><div id="hist">Belum ada.</div></div>
+ <div class="card hist" style="margin-top:16px"><b>Data dan cadangan</b>
+  <p style="color:var(--mute);margin:4px 0 8px">Data hanya ada di browser ini. Unduh cadangan secara berkala, terutama sebelum ganti HP atau membersihkan browser.</p>
+  <div class="bar"><button class="alt" id="bk" type="button">Unduh cadangan</button><button class="alt" id="rsb" type="button">Pulihkan</button><button class="alt" id="wipe" type="button">Hapus semua data</button></div>
+  <input id="rs" type="file" accept="application/json,.json" hidden>
+ </div>
+</div>
+
+<div id="inv" aria-live="polite"></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const rp=n=>"Rp "+(Math.round(n)||0).toLocaleString("id-ID");
+const esc=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let items=[{n:"",q:1,p:0}];
+
+function nextNo(){const c=store.get("inv_counter",0)+1;const d=new Date();return "INV-"+d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+"-"+String(c).padStart(3,"0")}
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+
+function drawItems(){
+ $("items").innerHTML=items.map((it,i)=>`<div class="item">
+  <input data-i="${i}" data-k="n" list="cat" autocomplete="off" placeholder="Nama barang" value="${esc(it.n)}" aria-label="Nama barang">
+  <input data-i="${i}" data-k="q" type="number" min="1" value="${it.q}" aria-label="Jumlah">
+  <input data-i="${i}" data-k="p" type="number" min="0" value="${it.p}" aria-label="Harga satuan">
+  <button class="x" type="button" data-del="${i}" aria-label="Hapus barang">×</button></div>`).join("");
+}
+function totals(){
+ const sub=items.reduce((s,i)=>s+(+i.q||0)*(+i.p||0),0);
+ const ship=+$("ship").value||0,disc=+$("disc").value||0;
+ return{sub,ship,disc,total:Math.max(0,sub+ship-disc)};
+}
+function render(){
+ const t=totals(),d=$("date").value?new Date($("date").value+"T00:00").toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}):"";
+ $("inv").innerHTML=`<div class="top"><div><h2>${esc($("sName").value||"Nama usaha")}</h2>
+  <div style="white-space:pre-wrap;font-size:13px">${esc($("sInfo").value)}</div></div>
+  <div class="meta"><b>INVOICE</b><br>${esc($("no").value)}<br>${d}<br><span class="src">${esc($("src").value)}</span></div></div>
+  <div><small style="color:#5d7074">Ditagihkan kepada</small><br><b>${esc($("cName").value||"-")}</b><br>
+  ${esc($("cPhone").value)}<div style="white-space:pre-wrap;font-size:13px">${esc($("cAddr").value)}</div></div>
+  <table><thead><tr><th>Barang</th><th class="n">Jml</th><th class="n">Harga</th><th class="n">Subtotal</th></tr></thead><tbody>
+  ${items.filter(i=>i.n||i.p).map(i=>`<tr><td>${esc(i.n)}</td><td class="n">${+i.q||0}</td><td class="n">${rp(i.p)}</td><td class="n">${rp((+i.q||0)*(+i.p||0))}</td></tr>`).join("")}
+  </tbody></table>
+  <div class="tot"><div><span>Subtotal</span><span>${rp(t.sub)}</span></div>
+  ${t.ship?`<div><span>Ongkir</span><span>${rp(t.ship)}</span></div>`:""}
+  ${t.disc?`<div><span>Diskon</span><span>-${rp(t.disc)}</span></div>`:""}
+  <div class="grand"><span>Total</span><span>${rp(t.total)}</span></div>
+  <div><span>Status</span><b>${esc($("status").value)}</b></div></div>
+  ${$("sPay").value?`<div class="note"><b>Pembayaran</b>\n${esc($("sPay").value)}</div>`:""}
+  ${$("note").value?`<div class="note">${esc($("note").value)}</div>`:""}`;
+}
+function data(){return{no:$("no").value,date:$("date").value,src:$("src").value,cName:$("cName").value,cPhone:$("cPhone").value,cAddr:$("cAddr").value,ship:$("ship").value,disc:$("disc").value,status:$("status").value,note:$("note").value,items}}
+function load(o){
+ for(const k of["no","date","src","cName","cPhone","cAddr","ship","disc","status","note"])$(k).value=o[k]??"";
+ items=o.items&&o.items.length?o.items:[{n:"",q:1,p:0}];drawItems();render();
+}
+function saveSeller(){store.set("inv_seller",{n:$("sName").value,i:$("sInfo").value,p:$("sPay").value})}
+let tab="Semua";
+const totOf=o=>Math.max(0,(o.items||[]).reduce((s,i)=>s+(+i.q||0)*(+i.p||0),0)+(+o.ship||0)-(+o.disc||0));
+function drawHist(){
+ const h=store.get("inv_hist",[]),st=["Semua","Belum dibayar","DP","Lunas"];
+ const owe=h.filter(o=>o.status!=="Lunas");
+ $("owe").innerHTML=`Belum lunas: <b>${owe.length}</b> pesanan · ${rp(owe.reduce((s,o)=>s+totOf(o),0))}`;
+ $("tabs").innerHTML=st.map(x=>`<button type="button" class="alt${x===tab?" on":""}" data-tab="${x}">${x} (${x==="Semua"?h.length:h.filter(o=>o.status===x).length})</button>`).join("");
+ const rows=h.map((o,i)=>[o,i]).filter(([o])=>tab==="Semua"||o.status===tab);
+ $("hist").innerHTML=rows.length?rows.map(([o,i])=>`<div class="ord"><div><b>${esc(o.cName||"-")}</b> <small>${esc(o.no)} · ${esc(o.src)}</small><br>${rp(totOf(o))} · ${esc(o.status)}</div><div><button class="alt" type="button" data-h="${i}">Buka</button>${o.status!=="Lunas"?`<button type="button" data-paid="${i}">Lunas</button>`:""}</div></div>`).join(""):"Belum ada.";
+}
+function drawCat(){
+ const c=store.get("inv_cat",[]);
+ $("cat").innerHTML=c.map(x=>`<option value="${esc(x.n)}">`).join("");
+ $("catl").innerHTML=c.map((x,i)=>`<div class="ord"><span>${esc(x.n)} · ${rp(x.p)}</span><button class="alt" type="button" data-cdel="${i}">Hapus</button></div>`).join("")||"Belum ada produk.";
+}
+function newInv(){
+ load({no:nextNo(),date:today(),src:"WhatsApp",ship:0,disc:0,status:"Belum dibayar",items:[{n:"",q:1,p:0}]});
+}
+
+document.addEventListener("input",e=>{
+ const t=e.target;
+ if(t.dataset&&t.dataset.i!==undefined){const it=items[+t.dataset.i];it[t.dataset.k]=t.dataset.k==="n"?t.value:+t.value;
+  if(t.dataset.k==="n"&&!it.p){const m=store.get("inv_cat",[]).find(c=>c.n.toLowerCase()===t.value.trim().toLowerCase());if(m){it.p=m.p;t.parentNode.querySelector('[data-k="p"]').value=m.p}}}
+ if(["sName","sInfo","sPay"].includes(t.id))saveSeller();
+ render();
+});
+document.addEventListener("click",e=>{
+ const t=e.target;
+ if(t.dataset.del!==undefined){items.splice(+t.dataset.del,1);if(!items.length)items=[{n:"",q:1,p:0}];drawItems();render()}
+ if(t.dataset.h!==undefined)load(store.get("inv_hist",[])[+t.dataset.h]);
+ if(t.dataset.tab){tab=t.dataset.tab;drawHist()}
+ if(t.dataset.paid!==undefined){const h=store.get("inv_hist",[]),o=h[+t.dataset.paid];o.status="Lunas";store.set("inv_hist",h);if(o.no===$("no").value){$("status").value="Lunas";render()}drawHist()}
+ if(t.dataset.cdel!==undefined){const c=store.get("inv_cat",[]);c.splice(+t.dataset.cdel,1);store.set("inv_cat",c);drawCat()}
+});
+$("add").onclick=()=>{items.push({n:"",q:1,p:0});drawItems()};
+$("bk").onclick=()=>{const b=new Blob([JSON.stringify({v:1,seller:store.get("inv_seller",{}),cat:store.get("inv_cat",[]),hist:store.get("inv_hist",[]),counter:store.get("inv_counter",0)})],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="cadangan-invoice-"+today()+".json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+$("rsb").onclick=()=>$("rs").click();
+$("rs").onchange=e=>{const f=e.target.files[0];e.target.value="";if(!f||!confirm("Pulihkan akan menimpa data di browser ini. Lanjutkan?"))return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||d.v!==1)throw 0;store.set("inv_seller",d.seller||{});store.set("inv_cat",Array.isArray(d.cat)?d.cat:[]);store.set("inv_hist",Array.isArray(d.hist)?d.hist:[]);store.set("inv_counter",+d.counter||0);location.reload()}catch(x){alert("File cadangan tidak valid.")}};r.readAsText(f)};
+$("wipe").onclick=()=>{if(confirm("Hapus semua data (penjual, katalog, pesanan) di browser ini? Tidak bisa dibatalkan.")){["inv_seller","inv_cat","inv_hist","inv_counter"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});location.reload()}};
+$("cadd").onclick=()=>{const n=$("cn").value.trim();if(!n)return;const c=store.get("inv_cat",[]).filter(x=>x.n.toLowerCase()!==n.toLowerCase());c.push({n,p:+$("cp").value||0});c.sort((a,b)=>a.n.localeCompare(b.n));store.set("inv_cat",c);$("cn").value="";$("cp").value="";drawCat()};
+$("print").onclick=()=>window.print();
+$("new").onclick=newInv;
+$("save").onclick=()=>{
+ const h=store.get("inv_hist",[]),o=data(),i=h.findIndex(x=>x.no===o.no);
+ if(i>=0)h[i]=o;else{h.unshift(o);store.set("inv_counter",store.get("inv_counter",0)+1)}
+ store.set("inv_hist",h.slice(0,200));drawHist();
+};
+$("wa").onclick=()=>{
+ const t=totals();
+ let p=($("cPhone").value||"").replace(/\D/g,"");
+ if(p.startsWith("0"))p="62"+p.slice(1);
+ const msg=`Halo ${$("cName").value||""}, ini invoice ${$("no").value} dari ${$("sName").value||"kami"}.\n\n`+
+  items.filter(i=>i.n).map(i=>`- ${i.n} x${i.q}: ${rp(i.q*i.p)}`).join("\n")+
+  `\n\nTotal: ${rp(t.total)} (${$("status").value})`+($("sPay").value?`\n\nPembayaran:\n${$("sPay").value}`:"")+"\n\nTerima kasih!";
+ window.open("https://wa.me/"+p+"?text="+encodeURIComponent(msg),"_blank");
+};
+
+const s=store.get("inv_seller",{});
+$("sName").value=s.n||"";$("sInfo").value=s.i||"";$("sPay").value=s.p||"";
+newInv();drawHist();drawCat();
+</script>
+</body>
+</html>
